@@ -1,0 +1,28 @@
+# Config file for automatic testing at travis-ci.org
+
+language: python
+
+python:
+#  - "3.3"
+  - "2.7"
+  - "2.6"
+env:
+  global:
+    - REQUIREMENTS_FILE='requirements-test.txt'
+  matrix:
+#    - DJANGO_PACKAGE=https://github.com/django/django/archive/stable/1.4.x.zip
+    - DJANGO_PACKAGE=https://github.com/django/django/archive/stable/1.5.x.zip
+    - DJANGO_PACKAGE=https://github.com/django/django/archive/stable/1.6.x.zip
+    - REQUIREMENTS_FILE='requirements-test-with-inflect.txt'
+#    - DJANGO_PACKAGE=https://github.com/django/django/archive/1.7c2.zip
+
+# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+install: 
+  - pip install -r requirements-test.txt
+  - pip install $DJANGO_PACKAGE
+
+# command to run tests using coverage, e.g. python setup.py test
+script: coverage run --source drf_nested_resource runtests.py
+
+# report coverage to coveralls.io
+after_success: coveralls

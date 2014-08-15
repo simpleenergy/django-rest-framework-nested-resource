@@ -1,0 +1,4 @@
+# Additional requirements go here
+wheel==0.23.0
+django>=1.5
+djangorestframework>=2.3.14
