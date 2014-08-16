@@ -221,7 +221,7 @@ def find_parent_to_child_manager(parent_obj, child_model):
             child_model._meta.get_all_related_many_to_many_objects(),
         )
     )
-    if len(related_objects) != 1:
+    if len(set(related_objects)) != 1:
         raise ImproperlyConfigured(
             "Unable to find manager from {!r} to {!r}.  You may need to declare "
             "`parent_to_child_manager_attr` on your view if the manager is in a "
@@ -235,6 +235,10 @@ def find_parent_to_child_manager(parent_obj, child_model):
     if isinstance(rel, generic.GenericRel):
         return getattr(parent_obj, rel.field.attname)
     elif issubclass(rel.model, child_model):
-        return getattr(parent_obj, rel.get_accessor_name())
+        if rel.model == rel.parent_model:
+            # Self referencing ManyToManyField
+            return getattr(parent_obj, rel.field.attname)
+        else:
+            return getattr(parent_obj, rel.get_accessor_name())
     elif isinstance(parent_obj, rel.model):
         return getattr(parent_obj, rel.field.attname)

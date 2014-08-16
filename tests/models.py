@@ -31,3 +31,7 @@ class ManyToManySourceModel(models.Model):
 
 class ManyToManySourceNoRelatedNameModel(models.Model):
     targets = models.ManyToManyField(ManyToManyTargetModel)
+
+
+class SelfReferencingManyToManyModel(models.Model):
+    targets = models.ManyToManyField('self')
