@@ -7,20 +7,20 @@ from django.db.models.fields.related import (
     ManyRelatedObjectsDescriptor,
     RelatedObject,
 )
-from django.contrib.contenttypes import generic
+
 from django.core.exceptions import ImproperlyConfigured
 
-from drf_nested_resource.compat import singular_noun
+from drf_nested_resource.compat import singular_noun, GenericForeignKey, GenericRelation, GenericRel
 
 
 def is_generic_relationship_pair(parent_field, child_field):
     """
     Given a field from the parent model and a field from the child model
     """
-    if not isinstance(child_field, generic.GenericForeignKey):
+    if not isinstance(child_field, GenericForeignKey):
         return False
 
-    if not isinstance(parent_field, generic.GenericRelation):
+    if not isinstance(parent_field, GenericRelation):
         return False
 
     child_model = child_field.model
@@ -188,7 +188,7 @@ def compute_default_url_kwarg_for_parent(parent_model, child_model):
 
 def get_all_virtual_relations(model):
     generic_relations = filter(
-        lambda f: isinstance(f, generic.GenericRelation),
+        lambda f: isinstance(f, GenericRelation),
         model._meta.virtual_fields,
     )
     return [field.rel for field in generic_relations]
@@ -196,7 +196,7 @@ def get_all_virtual_relations(model):
 
 def find_parent_to_child_manager(parent_obj, child_model):
     def is_relation_to_child_model(rel):
-        if isinstance(rel, generic.GenericRel):
+        if isinstance(rel, GenericRel):
             return issubclass(rel.to, child_model)
         if isinstance(rel, RelatedObject):
             if issubclass(rel.model, child_model):
@@ -232,7 +232,7 @@ def find_parent_to_child_manager(parent_obj, child_model):
 
     rel = related_objects[0]
 
-    if isinstance(rel, generic.GenericRel):
+    if isinstance(rel, GenericRel):
         return getattr(parent_obj, rel.field.attname)
     elif issubclass(rel.model, child_model):
         if rel.model == rel.parent_model:
