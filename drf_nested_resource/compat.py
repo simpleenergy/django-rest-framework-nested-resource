@@ -1,3 +1,9 @@
+try:
+    from django.contrib.contenttypes.generic import GenericForeignKey, GenericRelation, GenericRel
+except ImportError:
+    from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation, GenericRel
+
+
 def dumb_singular_noun(word, count=None):
     """
     *dumb* implementation of the `inflect` library's `singular_noun` function which simply strips off a trailing 's' if present.

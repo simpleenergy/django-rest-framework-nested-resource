@@ -1,3 +1,4 @@
+import django
 from django.db import models
 from django.contrib.contenttypes import generic
 
@@ -20,6 +21,12 @@ class ForeignKeySourceModel(models.Model):
 class ForeignKeySourceNoRelatedNameModel(models.Model):
     target = models.ForeignKey(TargetModel)
 
+    # We have to add a Meta class with all this dodgy permissions stuff to keep Django 1.7 from
+    # complaining loudly about the name of the generated permission for this model being too long.
+    class Meta:
+        if tuple(int(e) for e in django.get_version().split(".")) >= (1, 7):
+            default_permissions = ()
+
 
 class ManyToManyTargetModel(models.Model):
     pass
@@ -31,3 +38,9 @@ class ManyToManySourceModel(models.Model):
 
 class ManyToManySourceNoRelatedNameModel(models.Model):
     targets = models.ManyToManyField(ManyToManyTargetModel)
+
+    # We have to add a Meta class with all this dodgy permissions stuff to keep Django 1.7 from
+    # complaining loudly about the name of the generated permission for this model being too long.
+    class Meta:
+        if tuple(int(e) for e in django.get_version().split(".")) >= (1, 7):
+            default_permissions = ()
