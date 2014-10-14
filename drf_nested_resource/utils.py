@@ -199,7 +199,7 @@ def find_parent_to_child_manager(parent_obj, child_model):
         if isinstance(rel, GenericRel):
             return issubclass(rel.to, child_model)
         if isinstance(rel, RelatedObject):
-            if issubclass(rel.model, child_model):
+            if isinstance(parent_obj, rel.parent_model) and issubclass(rel.model, child_model):
                 return True
             # reverse
             if issubclass(rel.parent_model, child_model):
@@ -221,12 +221,21 @@ def find_parent_to_child_manager(parent_obj, child_model):
             child_model._meta.get_all_related_many_to_many_objects(),
         )
     )
-    if len(set(related_objects)) != 1:
+    if len(set(related_objects)) < 1:
         raise ImproperlyConfigured(
             "Unable to find manager from {!r} to {!r}.  You may need to declare "
             "`parent_to_child_manager_attr` on your view if the manager is in a "
             "custom location.".format(
                 parent_obj.__class__, child_model,
+            )
+        )
+    elif len(set(related_objects)) > 1:
+        raise ImproperlyConfigured(
+            "Found multiple valid related objects while trying to find manager "
+            "from {!r} to {!r}.  You may need to declare "
+            "`parent_to_child_manager_attr` on your view.  Found related objects "
+            "{!r}".format(
+                parent_obj.__class__, child_model, related_objects,
             )
         )
 

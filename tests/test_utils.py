@@ -20,6 +20,7 @@ from tests.models import (
     ManyToManySourceModel,
     ManyToManySourceNoRelatedNameModel,
     SelfReferencingManyToManyModel,
+    ManyToManyTowardsSelfReference,
 )
 
 
@@ -264,6 +265,14 @@ class GetParentToChildManagerTest(TestCase):
 
     def test_many_to_many_relationship_with_self(self):
         parent_obj = SelfReferencingManyToManyModel.objects.create()
+        manager = find_parent_to_child_manager(
+            parent_obj=parent_obj,
+            child_model=SelfReferencingManyToManyModel,
+        )
+        self.assertManagersEqual(manager, parent_obj.targets)
+
+    def test_m2m_towards_self_referencing_model(self):
+        parent_obj = ManyToManyTowardsSelfReference.objects.create()
         manager = find_parent_to_child_manager(
             parent_obj=parent_obj,
             child_model=SelfReferencingManyToManyModel,
