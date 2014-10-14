@@ -54,3 +54,10 @@ class SelfReferencingManyToManyModel(models.Model):
 
     class Meta(ShortenPermissionsNameMeta):
         pass
+
+
+class ManyToManyTowardsSelfReference(models.Model):
+    targets = models.ManyToManyField(SelfReferencingManyToManyModel)
+
+    class Meta(ShortenPermissionsNameMeta):
+        pass
