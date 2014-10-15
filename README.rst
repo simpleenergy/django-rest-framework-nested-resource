@@ -16,7 +16,7 @@ DRF view mixin for nested resources
 Documentation
 -------------
 
-The full documentation is at https://django-rest-framework-nested-resource.readthedocs.org.
+The full documentation is at https://drf-nested-resource.readthedocs.org.
 
 Quickstart
 ----------
