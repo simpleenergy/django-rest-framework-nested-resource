@@ -69,7 +69,7 @@ class NestedForeignKeyRelationshipTest(TestCase):
 
     def test_404_on_detail_request_for_non_related_instances(self):
         """
-        Test that a 404 is returned if we try to retreive an instance that is
+        Test that a 404 is returned if we try to retrieve an instance that is
         not related to the `TargetModel` instance.
         """
         target_a = TargetModel.objects.create()
